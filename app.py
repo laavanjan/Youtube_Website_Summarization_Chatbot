@@ -82,7 +82,7 @@ if st.button("Summarize the Content from YT or Website"):
                         },
                     )
                     docs = loader.load()
-
+                    #by laavanjan
                 llm = ChatGroq(model="llama3-70b-8192", groq_api_key=api_key)
 
                 prompt_template = """
