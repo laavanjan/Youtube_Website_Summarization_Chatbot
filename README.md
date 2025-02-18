@@ -1,6 +1,6 @@
 
 # Youtube_Website_Summarization_Chatbot 🤖
-
+![Screenshot 1](img1.png)
 This Streamlit application leverages the power of LangChain and llama3-70b-8192 LLMs to provide concise summaries of content from both YouTube videos and website URLs.  It offers a user-friendly interface for quickly grasping the key information from articles or video transcripts, saving you valuable time.
 
 ## Table of Contents
@@ -47,14 +47,17 @@ This Streamlit application leverages the power of LangChain and llama3-70b-8192 
 
 *(Include screenshots here demonstrating the app's interface and functionality.  Examples:)*
 
-*Screenshot 1: Main interface with URL input.*
-![Screenshot 1](about:sanitized)  *(Replace with actual screenshot)*
+| **Website summarization** |  **YouTube video summarization** |  **YouTube video summarization** |
+|---------|---------|---------|
+| ![alt_image](img2.png) | ![alt_image](img3.png) |![alt_image](img4.png) |
+| **Website summarization** | **Website summarization** | **YouTube video summarization** |
+| ![alt_image](img5.png) |![alt_image](img6.png) | ![alt_image](img7.png) |
 
-*Screenshot 2: Example YouTube video summarization.*
-![Screenshot 2](about:sanitized)  *(Replace with actual screenshot)*
 
-*Screenshot 3: Example website summarization.*
-![Screenshot 3](about:sanitized)  *(Replace with actual screenshot)*
+*(Screenshots showcasing the application's interface and features click to view)*
+
+### 🔍LangSmith Tracing📝
+![alt_image](img8.png)
 
 ## Environment Variables 🔑
 
@@ -67,7 +70,7 @@ LANGCHAIN_TRACING_V2="true" # For LangSmith tracing
 LANGCHAIN_PROJECT="YOUR_LANGCHAIN_PROJECT" # For LangSmith tracing
 ```
 
-Replace `"YOUR_GROQ_API_KEY"`, `"YOUR_LANGCHAIN_API_KEY"`, and `"YOUR_LANGCHAIN_PROJECT"` with your actual API keys and project name.  **Do not commit this file to your repository.**
+Replace `"YOUR_API_KEY"`, `"YOUR_LANGCHAIN_API_KEY"`, and `"YOUR_LANGCHAIN_PROJECT"` with your actual API keys and project name.  **Do not commit this file to your repository.**
 
 ## Troubleshooting 🐛
 
@@ -83,10 +86,6 @@ Contributions are welcome\! Feel free to submit pull requests or open issues.
 ## License 📄
 
 This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
-
-## Contact 📧
-
-Laavanjan - [Your Email Address]
 
 -----
 
