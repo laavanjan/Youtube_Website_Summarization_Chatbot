@@ -5,29 +5,25 @@ from langchain_groq import ChatGroq
 from langchain.chains.summarize import load_summarize_chain
 from langchain_community.document_loaders import UnstructuredURLLoader
 from langchain_community.document_loaders import YoutubeLoader
-from langchain.schema import Document  # Import Document class
-import yt_dlp  # Alternative for YouTube video extraction
-from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled  # Extract actual video transcript
+from langchain.schema import Document 
+import yt_dlp  
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled  
 import os
 from dotenv import load_dotenv
-## Langsmith Tracking
 os.environ["LANGCHAIN_API_KEY"]=os.getenv("LANGCHAIN_API_KEY")
 os.environ["LANGCHAIN_TRACING_V2"]="true"
 os.environ["LANGCHAIN_PROJECT"]=os.getenv("LANGCHAIN_PROJECT")
 
-# Load environment variables from .env file
 load_dotenv()
-api_key = os.getenv("GROQ_API_KEY")  # Fetch the Groq API Key from .env file
+api_key = os.getenv("API_KEY") 
 
-# Streamlit app configuration
+
 st.set_page_config(page_title="LangChain: Summarize Text From YT or Website", page_icon="🦜")
 st.title("🦜 LangChain: Summarize an Aritcle From YT or Website")
 st.subheader("Summarize URL")
 
-# Input for the URL (No need for API key input now, as it's set in the code)
 generic_url = st.text_input("URL", label_visibility="collapsed")
 
-# Extract video ID from YouTube URL
 def extract_video_id(url):
     """Extracts the YouTube video ID from a given URL"""
     from urllib.parse import urlparse, parse_qs
@@ -39,7 +35,6 @@ def extract_video_id(url):
         return parsed_url.path.lstrip("/")
     return None
 
-# Ensure valid input before initializing LLM
 if st.button("Summarize the Content from YT or Website"):
     if not api_key or not generic_url.strip():
         st.error("Please provide the required information to get started.")
@@ -50,30 +45,24 @@ if st.button("Summarize the Content from YT or Website"):
             with st.spinner("Waiting..."):
                 docs = None
 
-                # Load content from YouTube or website
                 if "youtube.com" in generic_url or "youtu.be" in generic_url:
                     video_id = extract_video_id(generic_url)
 
                     try:
-                        # ✅ First attempt: Use LangChain YoutubeLoader (pytube)
                         loader = YoutubeLoader.from_youtube_url(generic_url, add_video_info=True)
                         docs = loader.load()
 
                     except Exception as yt_error:
-                        #st.warning("⚠️ Failed to load YouTube video using pytube. Switching to alternative method...")
 
                         try:
-                            # ✅ Second attempt: Use youtube_transcript_api for actual transcript
                             transcript = YouTubeTranscriptApi.get_transcript(video_id)
                             transcript_text = " ".join([entry["text"] for entry in transcript])
 
                             docs = [Document(page_content=transcript_text)]
 
                         except TranscriptsDisabled:
-                            st.warning("⚠️ No transcript available. Extracting description instead...")
                             
                             try:
-                                # ✅ Third attempt: Use yt-dlp to extract video metadata
                                 ydl_opts = {'quiet': True, 'noplaylist': True, 'skip_download': True}
                                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                                     info_dict = ydl.extract_info(generic_url, download=False)
@@ -85,7 +74,6 @@ if st.button("Summarize the Content from YT or Website"):
                                 st.error(f"❌ Failed to extract video content using yt-dlp: {ytdlp_error}")
                                 st.stop()
                 else:
-                    # If it's a website, use UnstructuredURLLoader
                     loader = UnstructuredURLLoader(
                         urls=[generic_url],
                         ssl_verify=True,
@@ -95,10 +83,8 @@ if st.button("Summarize the Content from YT or Website"):
                     )
                     docs = loader.load()
 
-                # Initialize LLM only if API key is valid
                 llm = ChatGroq(model="llama3-70b-8192", groq_api_key=api_key)
 
-                # Define summarization prompt
                 prompt_template = """
                 Provide a summary of the following content in 300 words
                 Don't mention the no of words in your response
@@ -106,7 +92,6 @@ if st.button("Summarize the Content from YT or Website"):
                 """
                 prompt = PromptTemplate(template=prompt_template, input_variables=["text"])
 
-                # Chain for summarization
                 chain = load_summarize_chain(llm, chain_type="stuff", prompt=prompt)
                 output_summary = chain.run(docs)
 
@@ -114,7 +99,6 @@ if st.button("Summarize the Content from YT or Website"):
         except Exception as e:
             st.error(f"Exception: {e}")
 
-# Custom footer styling
 footer_html = """
     <style>
     body {
